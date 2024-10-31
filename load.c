@@ -4,8 +4,19 @@
 
 #include "sotest.h"
 
+Command *create_command_node(Command *current_command, char *content) {
+	Command *new_command = (Command *) malloc(sizeof(Command));
+	new_command->content = content;
+	new_command->next = NULL;
 
-ssize_t get_commands(char **commands, char *filename) {
+	if (current_command) {
+		current_command->next = new_command;
+	}
+
+	return (new_command);
+}
+
+ssize_t get_commands(Command **commands, char *filename) {
     char *READ_MODE = "r";
     FILE *fd = fopen(filename, READ_MODE);
     if (!fd) {
@@ -15,19 +26,32 @@ ssize_t get_commands(char **commands, char *filename) {
 
     char *line = NULL;
     size_t size = 0;
-    int i = 0;
+    ssize_t i = 0;
+	
+	char head_has_been_set = 0;
+	Command *curr = NULL;
+
     while(getline(&line, &size, fd) != -1) {
-        commands[i] = (char *) malloc(strlen(line));
-        if (!commands[i]) {
-            perror("Allocating memory has failed!");
+        char *content = (char *) malloc(strlen(line));
+        if (!content) {
+            perror("Allocating memory for content has failed!");
             return (-1);
         }
-        memcpy(commands[i], line, strlen(line) - 1);
+        memcpy(content, line, strlen(line) - 1);
         // replacing new line with null terminatar
-        commands[i][strlen(line) - 1] = '\0';
+        content[strlen(line) - 1] = '\0';
         i++;
+
+		curr = create_command_node(curr, content);
+		if (!curr) {
+			perror("Error creating command node!");
+			return (-1);
+		}
+		if (!head_has_been_set) {
+			*commands = curr;
+			head_has_been_set = 1;
+		}
     }
-    commands[i] = NULL;
-    return (sizeof(commands));
+    return (i);
 }
 

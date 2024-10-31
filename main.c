@@ -14,17 +14,17 @@ int main(int ac, char** av) {
     }
     
     printf("Running reading file...\n");
-    char *commands[1000];
-    if (get_commands(commands, av[1]) == -1) {
+    Command *commands = NULL;
+    if (get_commands(&commands, av[1]) == -1) {
         perror("There was an error getting comands!");
         exit(MISUSE_ERROR);
     }
         
     
     printf("Commands to be runned...\n");
-    char **copy = commands;
-    for(; *copy; copy++)
-        printf("%s\n", *copy);
+    Command *copy = commands;
+    for(; copy; copy = copy->next)
+        printf("%s\n", copy->content);
 
 	return (0);
 }
