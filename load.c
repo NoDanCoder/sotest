@@ -52,6 +52,7 @@ ssize_t get_commands(Command **commands, char *filename) {
 			head_has_been_set = 1;
 		}
     }
+	fclose(fd);
     return (i);
 }
 
