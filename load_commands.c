@@ -54,6 +54,7 @@ ssize_t get_commands(Metadata metadata, Command **commands, char *filename) {
             head_has_been_set = 1;
         }
     }
+    free(line);
     fclose(fd);
     return (i);
 }
