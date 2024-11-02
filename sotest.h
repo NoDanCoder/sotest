@@ -9,6 +9,7 @@ typedef struct Command {
 } Command;
 
 ssize_t get_commands(Command **commands, char *filename);
+Command *load_commands(int ac, char **av);
 
 #endif
 
