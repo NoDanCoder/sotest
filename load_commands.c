@@ -64,14 +64,14 @@ int MISUSE_ERROR = 2;
 Command *load_commands(Metadata metadata, int ac, char **av) {
     if (ac != 2) {
         perror("Only one file should be given!");
-        exit(MISUSE_ERROR);
+        safe_exit(MISUSE_ERROR, metadata.garbaje_collector_data);
     }
 
     printf("Running reading file...\n");
     Command *commands = NULL;
     if (get_commands(metadata, &commands, av[1]) == -1) {
         perror("There was an error getting comands!");
-        exit(MISUSE_ERROR);
+        safe_exit(GENERAL_ERROR, metadata.garbaje_collector_data);
     }
 
     return commands;
