@@ -1,5 +1,5 @@
-#ifndef SOTEST_H
-#define SOTEST_H
+#ifndef LOAD_COMMANDS_H
+#define LOAD_COMMANDS_H
 
 #include <unistd.h>
 

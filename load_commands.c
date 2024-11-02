@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "sotest.h"
+#include "load_commands.h"
 #include "memory_manager.h"
 #include "metadata.h"
 

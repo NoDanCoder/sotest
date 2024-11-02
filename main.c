@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 #include "memory_manager.h"
-#include "sotest.h"
+#include "load_commands.h"
 #include "metadata.h"
 
 int main(int ac, char** av) {
@@ -14,7 +14,7 @@ int main(int ac, char** av) {
 
     printf("Commands to be runned...\n");
     Command *copy = commands;
-    for(; copy; copy = copy->next)
+    for (; copy; copy = copy->next)
         printf("%s\n", copy->content);
 
     return (0);
