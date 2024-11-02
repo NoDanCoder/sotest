@@ -40,14 +40,19 @@ void *safe_malloc(MemoryQueueHead *head, unsigned long bytes) {
 	return location;
 }
 
-void safe_exit(int value, MemoryQueueHead *head) {
+void safe_free(MemoryQueueHead *head) {
     MemoryQueue *current = head->start;
     MemoryQueue *next;
     while (current) {
         next = current->next;
         free(current->MemoryAdress);
+        free(current);
         current = next;
     }
     free(head);
+}
+
+void safe_exit(int value, MemoryQueueHead *head) {
+    safe_free(head);
     exit(value);
 }

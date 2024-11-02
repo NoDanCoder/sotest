@@ -17,6 +17,7 @@ int main(int ac, char** av) {
     for (; copy; copy = copy->next)
         printf("%s\n", copy->content);
 
+    safe_free(metadata.garbaje_collector_data);
     return (0);
 }
 
