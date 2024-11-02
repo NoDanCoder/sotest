@@ -7,15 +7,15 @@
 #include "metadata.h"
 
 Command *create_command_node(Metadata metadata, Command *current_command, char *content) {
-	Command *new_command = (Command *) safe_malloc(metadata.garbaje_collector_data, sizeof(Command));
-	new_command->content = content;
-	new_command->next = NULL;
+    Command *new_command = (Command *) safe_malloc(metadata.garbaje_collector_data, sizeof(Command));
+    new_command->content = content;
+    new_command->next = NULL;
 
-	if (current_command) {
-		current_command->next = new_command;
-	}
+    if (current_command) {
+        current_command->next = new_command;
+    }
 
-	return (new_command);
+    return (new_command);
 }
 
 ssize_t get_commands(Metadata metadata, Command **commands, char *filename) {
@@ -29,9 +29,9 @@ ssize_t get_commands(Metadata metadata, Command **commands, char *filename) {
     char *line = NULL;
     size_t size = 0;
     ssize_t i = 0;
-	
-	char head_has_been_set = 0;
-	Command *curr = NULL;
+
+    char head_has_been_set = 0;
+    Command *curr = NULL;
 
     while(getline(&line, &size, fd) != -1) {
         char *content = (char *) safe_malloc(metadata.garbaje_collector_data, strlen(line));
@@ -44,17 +44,17 @@ ssize_t get_commands(Metadata metadata, Command **commands, char *filename) {
         content[strlen(line) - 1] = '\0';
         i++;
 
-		curr = create_command_node(metadata, curr, content);
-		if (!curr) {
-			perror("Error creating command node!");
-			return (-1);
-		}
-		if (!head_has_been_set) {
-			*commands = curr;
-			head_has_been_set = 1;
-		}
+        curr = create_command_node(metadata, curr, content);
+        if (!curr) {
+            perror("Error creating command node!");
+            return (-1);
+        }
+        if (!head_has_been_set) {
+            *commands = curr;
+            head_has_been_set = 1;
+        }
     }
-	fclose(fd);
+    fclose(fd);
     return (i);
 }
 
@@ -62,7 +62,7 @@ int GENERAL_ERROR = 1;
 int MISUSE_ERROR = 2;
 
 Command *load_commands(Metadata metadata, int ac, char **av) {
-	if (ac != 2) {
+    if (ac != 2) {
         perror("Only one file should be given!");
         exit(MISUSE_ERROR);
     }
@@ -74,5 +74,5 @@ Command *load_commands(Metadata metadata, int ac, char **av) {
         exit(MISUSE_ERROR);
     }
 
-	return commands;
+    return commands;
 }

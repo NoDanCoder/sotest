@@ -2,7 +2,7 @@
 #define METADATA_H
 
 typedef struct Metadata {
-	MemoryQueueHead *garbaje_collector_data;
+    MemoryQueueHead *garbaje_collector_data;
 } Metadata;
 
 #endif

@@ -6,17 +6,17 @@
 #include "metadata.h"
 
 int main(int ac, char** av) {
-	Metadata metadata;
-	MemoryQueueHead *garbaje_collector_data = setup_memory_queue();
-	metadata.garbaje_collector_data = garbaje_collector_data;
+    Metadata metadata;
+    MemoryQueueHead *garbaje_collector_data = setup_memory_queue();
+    metadata.garbaje_collector_data = garbaje_collector_data;
 
-	Command *commands = load_commands(metadata, ac, av);
+    Command *commands = load_commands(metadata, ac, av);
 
-	printf("Commands to be runned...\n");
+    printf("Commands to be runned...\n");
     Command *copy = commands;
     for(; copy; copy = copy->next)
         printf("%s\n", copy->content);
 
-	return (0);
+    return (0);
 }
 

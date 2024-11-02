@@ -4,13 +4,13 @@
 #include <unistd.h>
 
 typedef struct MemoryQueue {
-	void *MemoryAdress;
-	struct MemoryQueue *next;
+    void *MemoryAdress;
+    struct MemoryQueue *next;
 } MemoryQueue;
 
 typedef struct MemoryQueueHead {
-	MemoryQueue *start;
-	MemoryQueue *end;
+    MemoryQueue *start;
+    MemoryQueue *end;
 } MemoryQueueHead;
 
 MemoryQueueHead *setup_memory_queue(void);
