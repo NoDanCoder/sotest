@@ -116,7 +116,7 @@ Command *run_call_command(Metadata metadata, Command *use_command, Command *call
     return call_command;
 }
 
-void exec_command(Metadata metadata, Command *command) {
+void parse_commands(Metadata metadata, Command *command) {
     unsigned int line_number = 1;
     Command *use_command = NULL;
     Command *call_command = command;

@@ -4,7 +4,7 @@
 #include "memory_manager.h"
 #include "load_commands.h"
 #include "metadata.h"
-#include "exec_command.h"
+#include "parse_command.h"
 
 int main(int ac, char** av) {
     Metadata metadata;
@@ -18,7 +18,7 @@ int main(int ac, char** av) {
     for (; copy; copy = copy->next)
         printf("%s\n", copy->content);
 
-    exec_command(metadata, commands);
+    parse_commands(metadata, commands);
 
     safe_free(metadata.garbaje_collector_data);
     return (0);
