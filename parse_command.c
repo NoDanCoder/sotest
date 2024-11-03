@@ -6,6 +6,7 @@
 #include "metadata.h"
 #include "load_commands.h"
 #include "memory_manager.h"
+#include "exec_command.h"
 
 int valid_command(Metadata metadata, const char *str, const char *pattern) {
     regex_t regex;
@@ -110,12 +111,6 @@ Command *lookup_call_command(Metadata metadata, Command *command, unsigned int *
     return current;
 }
 
-Command *run_call_command(Metadata metadata, Command *use_command, Command *call_command) {
-    (void) metadata;
-    printf("Running %s func fron %s lib]\n", call_command->content, use_command->content);
-    return call_command;
-}
-
 void parse_commands(Metadata metadata, Command *command) {
     unsigned int line_number = 1;
     Command *use_command = NULL;
@@ -133,7 +128,7 @@ void parse_commands(Metadata metadata, Command *command) {
         if (!call_command || strcmp(call_command->identifier, "call") != 0) {
             perror("No 'call' command for current library found! Looking up for next use...");
         } else {
-            call_command = run_call_command(metadata, use_command, call_command);
+            call_command = run_call_command(metadata, use_command, call_command, &line_number);
             call_command = call_command->next;
         }
     }
