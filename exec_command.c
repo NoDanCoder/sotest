@@ -47,40 +47,40 @@ int valid_use_command(Metadata metadata, const char *str) {
     return valid_command(metadata, str, pattern);
 }
 
-Command *lookup_use_command(Metadata metadata, Command *command) {
+Command *lookup_use_command(Metadata metadata, Command *command, unsigned int *line_number) {
     Command *current = command;
-    unsigned int line = 1;
     while (current) {
         if (strncmp(current->content, "call ", 5) == 0) {
             fprintf(stderr, ">>> %s\n", current->content);
-            fprintf(stderr, "Warning: To call a function, a library should be given first : line %u\n", line);
+            fprintf(stderr, "Warning: To call a function, a library should be given first : line %u\n", *line_number);
         } else if (strncmp(current->content, "use ", 4) != 0) {
             fprintf(stderr, ">>> %s\n", current->content);
-            fprintf(stderr, "Warning: ´use' and 'call' are the only active commands right now : line %u\n", line);
+            fprintf(stderr, "Warning: ´use' and 'call' are the only active commands right now : line %u\n", *line_number);
         } else if(current->content[4] == ' '){
             fprintf(stderr, ">>> %s\n", current->content);
-            fprintf(stderr, "Warning: Only one space between command and argument : line %u\n", line);
+            fprintf(stderr, "Warning: Only one space between command and argument : line %u\n", *line_number);
         } else if(current->content[4] == '"' && current->content[strlen(current->content) - 1] != '"'){
             fprintf(stderr, ">>> %s\n", current->content);
-            fprintf(stderr, "Warning: If path starts with (\") it should finish with them : line %u\n", line);
+            fprintf(stderr, "Warning: If path starts with (\") it should finish with them : line %u\n", *line_number);
         } else if (!valid_use_command(metadata, current->content)) {
             fprintf(stderr, ">>> %s\n", current->content);
-            fprintf(stderr, "Warning: Syntax error command file path should be following linux guidelines : line %u\n", line);
+            fprintf(stderr, "Warning: Syntax error command file path should be following linux guidelines : line %u\n", *line_number);
         } else {
             break;
         }
         current = current->next;
-        line++;
+        *line_number += 1;
     }
     return current;
 }
 
 void exec_command(Metadata metadata, Command *command) {
-    Command *use_comand = lookup_use_command(metadata, command);
+    unsigned int line_number = 1;
+    Command *use_comand = lookup_use_command(metadata, command, &line_number);
     if (!use_comand) {
         perror("No 'use' command found!");
         return;
     }
 
-    printf("Starting session for command: %s\n", use_comand->content);
+    printf("Starting session for command: [%s] at line [%u]\n", use_comand->content, line_number);
 }
