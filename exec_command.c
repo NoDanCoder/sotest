@@ -9,35 +9,27 @@
 #include "parse_command.h"
 
 int validate_library(Command *use_command) {
-    char resolved_path[PATH_MAX];
     char *library_path = use_command->content + 4;
 
-    // TODO resolve memory overflow (POSIX.1-2001)
-    if (realpath(library_path, resolved_path) == NULL) {
-        fprintf(stderr, "Invalid path: %s\n", library_path);
+    if (access(library_path, R_OK) == -1) {
+        fprintf(stderr, "No read permission: %s\n", library_path);
         return (0);
     }
 
-    if (access(resolved_path, R_OK) == -1) {
-        fprintf(stderr, "No read permission: %s\n", resolved_path);
-        return (0);
-    }
-
-    use_command->argument = resolved_path;
+    use_command->argument = library_path;
     return (1);
 }
 
 
 Command *run_call_command(Metadata metadata, Command *use_command, Command *call_command, unsigned int *line_number) {
     Command *current_call_command = call_command;
-    printf("Running %s func fron %s lib]\n", call_command->content, use_command->content);
 
     if (!validate_library(use_command)) {
         return current_call_command;
     }
     dlerror();
 
-    void *handle = dlopen(use_command->argument, RTLD_LAZY);
+    void *handle = dlopen(use_command->content + 4, RTLD_LAZY);
     if (handle == NULL) {
         const char *error = dlerror();
         fprintf(stderr, "dlopen failed: %s\n", error ? error : "Unknown error");
@@ -47,15 +39,21 @@ Command *run_call_command(Metadata metadata, Command *use_command, Command *call
     printf("Successfully loaded: %s\n", use_command->argument);
     void (*func)(void);
     do {
-        *(void **) (&func) = dlsym(handle, current_call_command->content);
-        func();
-        current_call_command = lookup_call_command(metadata, use_command->next, line_number);
-    } while (!current_call_command || strcmp(current_call_command->identifier, "call") != 0);
+        *(void **) (&func) = dlsym(handle, current_call_command->content + 5);
+        if (func) {
+            func();
+        } else {
+            fprintf(stderr, "Method [%s] is not found! : line %u \n", call_command->content, *line_number);
+        }
+        current_call_command = lookup_call_command(metadata, current_call_command->next, line_number);
+    } while (current_call_command && strcmp(current_call_command->identifier, "call") == 0);
 
     if (dlclose(handle) != 0) {
         const char *error = dlerror();
         fprintf(stderr, "dlclose failed: %s\n", error ? error : "Unknown error");
     }
+
+    printf("Reacher here %p\n", (void *) current_call_command);
 
     return current_call_command;
 }

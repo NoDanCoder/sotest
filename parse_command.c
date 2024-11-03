@@ -129,7 +129,12 @@ void parse_commands(Metadata metadata, Command *command) {
             perror("No 'call' command for current library found! Looking up for next use...");
         } else {
             call_command = run_call_command(metadata, use_command, call_command, &line_number);
-            call_command = call_command->next;
+            if (!call_command) {
+                printf("Program finished successfully!\n");
+                break;
+            } else {
+                call_command = call_command->next;
+            }
         }
     }
     return;
