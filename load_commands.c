@@ -33,7 +33,7 @@ ssize_t get_commands(Metadata metadata, Command **commands, char *filename) {
     char head_has_been_set = 0;
     Command *curr = NULL;
 
-    while(getline(&line, &size, fd) != -1) {
+    while (getline(&line, &size, fd) != -1) {
         char *content = (char *) safe_malloc(metadata.garbaje_collector_data, strlen(line));
         if (!content) {
             perror("Allocating memory for content has failed!");

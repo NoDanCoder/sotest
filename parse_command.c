@@ -67,10 +67,10 @@ Command *lookup_use_command(Metadata metadata, Command *command, unsigned int *l
         } else if (strncmp(current->content, "use ", 4) != 0) {
             fprintf(stderr, ">>> %s\n", current->content);
             fprintf(stderr, "Warning: ´use' and 'call' are the only active commands right now : line %u\n", *line_number);
-        } else if(current->content[4] == ' '){
+        } else if (current->content[4] == ' '){
             fprintf(stderr, ">>> %s\n", current->content);
             fprintf(stderr, "Warning: Only one space between command and argument : line %u\n", *line_number);
-        } else if(current->content[4] == '"' && current->content[strlen(current->content) - 1] != '"'){
+        } else if (current->content[4] == '"' && current->content[strlen(current->content) - 1] != '"'){
             fprintf(stderr, ">>> %s\n", current->content);
             fprintf(stderr, "Warning: If path starts with (\") it should finish with them : line %u\n", *line_number);
         } else if (!valid_use_command(metadata, current->content)) {
@@ -95,7 +95,7 @@ Command *lookup_call_command(Metadata metadata, Command *command, unsigned int *
         } else if (strncmp(current->content, "call ", 5) != 0) {
             fprintf(stderr, ">>> %s\n", current->content);
             fprintf(stderr, "Warning: ´use' and 'call' are the only active commands right now : line %u\n", *line_number);
-        } else if(current->content[5] == ' ') {
+        } else if (current->content[5] == ' ') {
             fprintf(stderr, ">>> %s\n", current->content);
             fprintf(stderr, "Warning: Only one space between command and argument : line %u\n", *line_number);
         } else if (!valid_call_command(metadata, current->content)) {
