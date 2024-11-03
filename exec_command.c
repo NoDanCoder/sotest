@@ -40,9 +40,10 @@ int valid_use_command(Metadata metadata, const char *str) {
     // Pattern explanation:
     // ^use             - Must start with "use"
     // [ ]              - Followed by exactly one space
-    // [a-zA-Z_]        - First character after space must be letter or underscore
-    // [a-zA-Z0-9_]*$   - Followed by zero or more letters, numbers, or underscores
-    const char *pattern = "^use [a-zA-Z_][a-zA-Z0-9_]*$";
+    // (/|\\./|~/)?     - Could start with "/", "./", "~/" or nothing
+    // (.+/)*           - Match all folder that could have path
+    // [^/]+\\.so$.     - File sould start with at least one character before ending with .so extention
+    const char *pattern = "^use [\"\']?(/|\\./|~/)?(.+/)*[^/]+\\.so[\"\']?$";
     return valid_command(metadata, str, pattern);
 }
 
@@ -50,12 +51,21 @@ Command *lookup_use_command(Metadata metadata, Command *command) {
     Command *current = command;
     unsigned int line = 1;
     while (current) {
-        if (strncmp(current->content, "use ", 4)) {
+        if (strncmp(current->content, "call ", 5) == 0) {
             fprintf(stderr, ">>> %s\n", current->content);
             fprintf(stderr, "Warning: To call a function, a library should be given first : line %u\n", line);
+        } else if (strncmp(current->content, "use ", 4) != 0) {
+            fprintf(stderr, ">>> %s\n", current->content);
+            fprintf(stderr, "Warning: ´use' and 'call' are the only active commands right now : line %u\n", line);
+        } else if(current->content[4] == ' '){
+            fprintf(stderr, ">>> %s\n", current->content);
+            fprintf(stderr, "Warning: Only one space between command and argument : line %u\n", line);
+        } else if(current->content[4] == '"' && current->content[strlen(current->content) - 1] != '"'){
+            fprintf(stderr, ">>> %s\n", current->content);
+            fprintf(stderr, "Warning: If path starts with (\") it should finish with them : line %u\n", line);
         } else if (!valid_use_command(metadata, current->content)) {
             fprintf(stderr, ">>> %s\n", current->content);
-            fprintf(stderr, "Warning: Syntax error command func name should be following C guidelines : line %u\n", line);
+            fprintf(stderr, "Warning: Syntax error command file path should be following linux guidelines : line %u\n", line);
         } else {
             break;
         }
