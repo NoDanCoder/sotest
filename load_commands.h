@@ -8,6 +8,8 @@
 
 typedef struct Command {
     char *content;
+    char *identifier;
+    char *argument;
     struct Command *next;
 } Command;
 
@@ -16,4 +18,3 @@ Command *load_commands(Metadata metadata, int ac, char **av);
 Command *create_command_node(Metadata metadata, Command *current_command, char *content);
 
 #endif
-
