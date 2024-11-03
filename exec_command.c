@@ -74,7 +74,7 @@ Command *lookup_use_command(Metadata metadata, Command *command, unsigned int *l
             fprintf(stderr, "Warning: If path starts with (\") it should finish with them : line %u\n", *line_number);
         } else if (!valid_use_command(metadata, current->content)) {
             fprintf(stderr, ">>> %s\n", current->content);
-            fprintf(stderr, "Warning: Syntax error command file path should be following linux guidelines : line %u\n", *line_number);
+            fprintf(stderr, "Warning: Syntax error command file path should be following linux guidelines and be a '.so' file : line %u\n", *line_number);
         } else {
             current->identifier = "use";
             break;
