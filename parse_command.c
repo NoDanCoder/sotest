@@ -78,6 +78,7 @@ Command *lookup_use_command(Metadata metadata, Command *command) {
             fprintf(stderr, "Warning: Syntax error command file path should be following linux guidelines and be a '.so' file : line %u\n", current->index);
         } else {
             current->identifier = "use";
+            current->argument = current->content + 4;
             break;
         }
         current = current->next;
@@ -102,6 +103,7 @@ Command *lookup_call_command(Metadata metadata, Command *command) {
             fprintf(stderr, "Warning: Syntax error command func name should be following C guidelines : line %u\n", current->index);
         } else {
             current->identifier = "call";
+            current->argument = current->content + 5;
             break;
         }
         current = current->next;
@@ -128,8 +130,6 @@ void parse_commands(Metadata metadata, Command *command) {
             if (!call_command) {
                 printf("Program finished successfully!\n");
                 break;
-            } else {
-                call_command = call_command->next;
             }
         }
     }

@@ -9,14 +9,11 @@
 #include "parse_command.h"
 
 int validate_library(Command *use_command) {
-    char *library_path = use_command->content + 4;
-
-    if (access(library_path, R_OK) == -1) {
-        fprintf(stderr, "No read permission: %s\n", library_path);
+    if (access(use_command->argument, R_OK) == -1) {
+        fprintf(stderr, "No read permission: %s\n", use_command->argument);
         return (0);
     }
 
-    use_command->argument = library_path;
     return (1);
 }
 
@@ -29,7 +26,7 @@ Command *run_call_command(Metadata metadata, Command *use_command, Command *call
     }
     dlerror();
 
-    void *handle = dlopen(use_command->content + 4, RTLD_LAZY);
+    void *handle = dlopen(use_command->argument, RTLD_LAZY);
     if (handle == NULL) {
         const char *error = dlerror();
         fprintf(stderr, "dlopen failed: %s\n", error ? error : "Unknown error");
@@ -39,8 +36,9 @@ Command *run_call_command(Metadata metadata, Command *use_command, Command *call
     printf("Successfully loaded: %s\n", use_command->argument);
     void (*func)(void);
     do {
-        *(void **) (&func) = dlsym(handle, current_call_command->content + 5);
+        *(void **) (&func) = dlsym(handle, current_call_command->argument);
         if (func) {
+            printf("Running method [%s] from lib [%s]:\n $ ", current_call_command->argument, use_command->argument);
             func();
         } else {
             fprintf(stderr, "Method [%s] is not found! : line %u \n", current_call_command->content, current_call_command->index);
@@ -52,8 +50,6 @@ Command *run_call_command(Metadata metadata, Command *use_command, Command *call
         const char *error = dlerror();
         fprintf(stderr, "dlclose failed: %s\n", error ? error : "Unknown error");
     }
-
-    printf("Reacher here %p\n", (void *) current_call_command);
 
     return current_call_command;
 }
