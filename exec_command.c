@@ -27,7 +27,7 @@ void run_func(void (*func)(void)) {
         exit(0);
     } else {
         int status;
-        waitpid(pid, &status, 0);
+        wait(&status);
         printf("Finished process of running library with status %d\n\n", status);
     }
 }
