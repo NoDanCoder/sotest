@@ -17,6 +17,21 @@ int validate_library(Command *use_command) {
     return (1);
 }
 
+void run_func(void (*func)(void)) {
+    pid_t pid = fork();
+
+    if (pid < 0) {
+        perror("Error trying to fork process for library call");
+    } else if (pid == 0) {
+        func();
+        exit(0);
+    } else {
+        int status;
+        waitpid(pid, &status, 0);
+        printf("Finished process of running library with status %d\n\n", status);
+    }
+}
+
 
 Command *run_call_command(Metadata metadata, Command *use_command, Command *call_command) {
     Command *current_call_command = call_command;
@@ -24,7 +39,6 @@ Command *run_call_command(Metadata metadata, Command *use_command, Command *call
     if (!validate_library(use_command)) {
         return current_call_command;
     }
-    dlerror();
 
     void *handle = dlopen(use_command->argument, RTLD_LAZY);
     if (handle == NULL) {
@@ -38,9 +52,11 @@ Command *run_call_command(Metadata metadata, Command *use_command, Command *call
     do {
         *(void **) (&func) = dlsym(handle, current_call_command->argument);
         if (func) {
-            printf("Running method [%s] from lib [%s]:\n $ ", current_call_command->argument, use_command->argument);
-            func();
+            printf("Running method [%s] from lib [%s]:\n\n", current_call_command->argument, use_command->argument);
+            run_func(func);
         } else {
+            const char *error = dlerror();
+            fprintf(stderr, "Get function from lib failed: %s\n", error ? error : "Unknown error");
             fprintf(stderr, "Method [%s] is not found! : line %u \n", current_call_command->content, current_call_command->index);
         }
         current_call_command = lookup_call_command(metadata, current_call_command->next);
