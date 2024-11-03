@@ -4,6 +4,7 @@
 #include <limits.h>
 #include <unistd.h>
 #include <dlfcn.h>
+#include <sys/wait.h>
 
 #include "load_commands.h"
 #include "parse_command.h"
