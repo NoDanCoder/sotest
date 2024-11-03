@@ -21,7 +21,7 @@ int validate_library(Command *use_command) {
 }
 
 
-Command *run_call_command(Metadata metadata, Command *use_command, Command *call_command, unsigned int *line_number) {
+Command *run_call_command(Metadata metadata, Command *use_command, Command *call_command) {
     Command *current_call_command = call_command;
 
     if (!validate_library(use_command)) {
@@ -43,9 +43,9 @@ Command *run_call_command(Metadata metadata, Command *use_command, Command *call
         if (func) {
             func();
         } else {
-            fprintf(stderr, "Method [%s] is not found! : line %u \n", call_command->content, *line_number);
+            fprintf(stderr, "Method [%s] is not found! : line %u \n", current_call_command->content, current_call_command->index);
         }
-        current_call_command = lookup_call_command(metadata, current_call_command->next, line_number);
+        current_call_command = lookup_call_command(metadata, current_call_command->next);
     } while (current_call_command && strcmp(current_call_command->identifier, "call") == 0);
 
     if (dlclose(handle) != 0) {

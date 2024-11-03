@@ -3,6 +3,6 @@
 
 #include "load_commands.h"
 
-Command *run_call_command(Metadata metadata, Command *use_command, Command *call_command, unsigned int *line_number);
+Command *run_call_command(Metadata metadata, Command *use_command, Command *call_command);
 
 #endif

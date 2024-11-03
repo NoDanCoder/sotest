@@ -6,10 +6,11 @@
 #include "memory_manager.h"
 #include "metadata.h"
 
-Command *create_command_node(Metadata metadata, Command *current_command, char *content) {
+Command *create_command_node(Metadata metadata, Command *current_command, char *content, unsigned int index) {
     Command *new_command = (Command *) safe_malloc(metadata.garbaje_collector_data, sizeof(Command));
     new_command->content = content;
     new_command->next = NULL;
+    new_command->index = index;
 
     if (current_command) {
         current_command->next = new_command;
@@ -44,7 +45,7 @@ ssize_t get_commands(Metadata metadata, Command **commands, char *filename) {
         content[strlen(line) - 1] = '\0';
         i++;
 
-        curr = create_command_node(metadata, curr, content);
+        curr = create_command_node(metadata, curr, content, i);
         if (!curr) {
             perror("Error creating command node!");
             return (-1);

@@ -58,35 +58,34 @@ int valid_call_command(Metadata metadata, const char *str) {
     return valid_command(metadata, str, pattern);
 }
 
-Command *lookup_use_command(Metadata metadata, Command *command, unsigned int *line_number) {
+Command *lookup_use_command(Metadata metadata, Command *command) {
     Command *current = command;
     while (current) {
         if (strncmp(current->content, "call ", 5) == 0) {
             fprintf(stderr, ">>> %s\n", current->content);
-            fprintf(stderr, "Warning: To call a function, a library should be given first : line %u\n", *line_number);
+            fprintf(stderr, "Warning: To call a function, a library should be given first : line %u\n", current->index);
         } else if (strncmp(current->content, "use ", 4) != 0) {
             fprintf(stderr, ">>> %s\n", current->content);
-            fprintf(stderr, "Warning: ´use' and 'call' are the only active commands right now : line %u\n", *line_number);
+            fprintf(stderr, "Warning: ´use' and 'call' are the only active commands right now : line %u\n", current->index);
         } else if (current->content[4] == ' '){
             fprintf(stderr, ">>> %s\n", current->content);
-            fprintf(stderr, "Warning: Only one space between command and argument : line %u\n", *line_number);
+            fprintf(stderr, "Warning: Only one space between command and argument : line %u\n", current->index);
         } else if (current->content[4] == '"' && current->content[strlen(current->content) - 1] != '"'){
             fprintf(stderr, ">>> %s\n", current->content);
-            fprintf(stderr, "Warning: If path starts with (\") it should finish with them : line %u\n", *line_number);
+            fprintf(stderr, "Warning: If path starts with (\") it should finish with them : line %u\n", current->index);
         } else if (!valid_use_command(metadata, current->content)) {
             fprintf(stderr, ">>> %s\n", current->content);
-            fprintf(stderr, "Warning: Syntax error command file path should be following linux guidelines and be a '.so' file : line %u\n", *line_number);
+            fprintf(stderr, "Warning: Syntax error command file path should be following linux guidelines and be a '.so' file : line %u\n", current->index);
         } else {
             current->identifier = "use";
             break;
         }
         current = current->next;
-        *line_number += 1;
     }
     return current;
 }
 
-Command *lookup_call_command(Metadata metadata, Command *command, unsigned int *line_number) {
+Command *lookup_call_command(Metadata metadata, Command *command) {
     Command *current = command;
     while (current) {
         if (strncmp(current->content, "use ", 4) == 0) {
@@ -94,41 +93,38 @@ Command *lookup_call_command(Metadata metadata, Command *command, unsigned int *
             return current;
         } else if (strncmp(current->content, "call ", 5) != 0) {
             fprintf(stderr, ">>> %s\n", current->content);
-            fprintf(stderr, "Warning: ´use' and 'call' are the only active commands right now : line %u\n", *line_number);
+            fprintf(stderr, "Warning: ´use' and 'call' are the only active commands right now : line %u\n", current->index);
         } else if (current->content[5] == ' ') {
             fprintf(stderr, ">>> %s\n", current->content);
-            fprintf(stderr, "Warning: Only one space between command and argument : line %u\n", *line_number);
+            fprintf(stderr, "Warning: Only one space between command and argument : line %u\n", current->index);
         } else if (!valid_call_command(metadata, current->content)) {
             fprintf(stderr, ">>> %s\n", current->content);
-            fprintf(stderr, "Warning: Syntax error command func name should be following C guidelines : line %u\n", *line_number);
+            fprintf(stderr, "Warning: Syntax error command func name should be following C guidelines : line %u\n", current->index);
         } else {
             current->identifier = "call";
             break;
         }
         current = current->next;
-        *line_number += 1;
     }
     return current;
 }
 
 void parse_commands(Metadata metadata, Command *command) {
-    unsigned int line_number = 1;
     Command *use_command = NULL;
     Command *call_command = command;
     while (1) {
-        use_command = lookup_use_command(metadata, call_command, &line_number);
+        use_command = lookup_use_command(metadata, call_command);
         if (!use_command) {
             perror("No 'use' command found!");
             break;
         }
-        printf("Starting session for command: [%s] at line [%u]\n", use_command->content, line_number);
+        printf("Starting session for command: [%s] at line [%u]\n", use_command->content, use_command->index);
 
-        line_number += 1;
-        call_command = lookup_call_command(metadata, use_command->next, &line_number);
+        call_command = lookup_call_command(metadata, use_command->next);
         if (!call_command || strcmp(call_command->identifier, "call") != 0) {
             perror("No 'call' command for current library found! Looking up for next use...");
         } else {
-            call_command = run_call_command(metadata, use_command, call_command, &line_number);
+            call_command = run_call_command(metadata, use_command, call_command);
             if (!call_command) {
                 printf("Program finished successfully!\n");
                 break;
