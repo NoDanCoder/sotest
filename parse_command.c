@@ -40,6 +40,7 @@ int valid_file_name(Metadata metadata, const char *str) {
     // Pattern explanation:
     // .+\\.sc          - Must finish with a .sc extention
     const char *pattern = "^.+\\.sc$";
+    printf("File name: %s\n", str);
     return valid_command(metadata, str, pattern);
 }
 

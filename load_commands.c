@@ -126,8 +126,8 @@ Command *load_commands(Metadata metadata, int ac, char **av) {
     if (ac != 2) {
         perror("Only one file should be given!");
         safe_exit(2, metadata.garbaje_collector_data);
-    } else if (valid_file_name(metadata, av[1])) {
-        perror("Only one file should be given!");
+    } else if (!valid_file_name(metadata, av[1])) {
+        perror("File must have the valid extention and name '<name>.sc'!");
         safe_exit(2, metadata.garbaje_collector_data);
     }
 
