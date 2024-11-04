@@ -12,12 +12,6 @@ int main(int ac, char** av) {
     metadata.garbaje_collector_data = garbaje_collector_data;
 
     Command *commands = load_commands(metadata, ac, av);
-
-    printf("Commands to be runned...\n");
-    Command *copy = commands;
-    for (; copy; copy = copy->next)
-        printf("%s\n", copy->content);
-
     parse_commands(metadata, commands);
 
     safe_free(metadata.garbaje_collector_data);
