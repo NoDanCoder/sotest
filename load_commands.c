@@ -57,18 +57,18 @@ ssize_t getline_2001(Metadata metadata, char **lineptr, size_t *n, FILE *stream)
             pos = *lineptr + bytes_read;
         }
 
-        if (ferror(stream)) {
-            perror("Error reading file (getline_2001)");
-            free(lineptr);
-            safe_exit(1, metadata.garbaje_collector_data);
-        }
-
         *pos++ = (char)c;
         bytes_read++;
 
         if (c == '\n') {
             break;
         }
+    }
+
+    if (ferror(stream)) {
+        perror("Error reading file (getline_2001)");
+        free(lineptr);
+        safe_exit(1, metadata.garbaje_collector_data);
     }
 
     if (bytes_read == 0) {

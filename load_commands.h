@@ -2,6 +2,7 @@
 #define LOAD_COMMANDS_H
 
 #include <unistd.h>
+#include <stdio.h>
 
 #include "memory_manager.h"
 #include "metadata.h"
@@ -14,6 +15,7 @@ typedef struct Command {
     struct Command *next;
 } Command;
 
+ssize_t getline_2001(Metadata metadata, char **lineptr, size_t *n, FILE *stream);
 ssize_t get_commands(Metadata metadata, Command **commands, char *filename);
 Command *load_commands(Metadata metadata, int ac, char **av);
 Command *create_command_node(Metadata metadata, Command *current_command, char *content, unsigned int index);
