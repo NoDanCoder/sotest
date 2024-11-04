@@ -91,6 +91,7 @@ Finished process of running library with status 0
 - If you are loading a library using a relative path use a relative search based on your current position `./`.
 - Support for inline comments in code is not enabled yet.
 - Any try to use a `use` command after already loaded a library will load the new library, even if command fails, on which case you will have to load a library again to start.
+- [Here](https://github.com/NoDanCoder/sotest/blob/main/output.txt) you can see the expected output for current `file.sc`.
 
 ## Authors
 

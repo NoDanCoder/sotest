@@ -1,0 +1,70 @@
+File name: file.sc
+Running reading file...
+>>> use
+Warning: ´use' and 'call' are the only active commands right now : line 1
+Usage: 'use <file>.so' after 'call <function>'
+>>> use
+Warning: ´use' and 'call' are the only active commands right now : line 2
+Usage: 'use <file>.so' after 'call <function>'
+>>> wrong command
+Warning: ´use' and 'call' are the only active commands right now : line 3
+Usage: 'use <file>.so' after 'call <function>'
+>>>  use pepe.so
+Warning: ´use' and 'call' are the only active commands right now : line 4
+Usage: 'use <file>.so' after 'call <function>'
+>>> usepepe.so
+Warning: ´use' and 'call' are the only active commands right now : line 6
+Usage: 'use <file>.so' after 'call <function>'
+>>> use .so
+Warning: Syntax error command file path should be following linux guidelines and be a '.so' file : line 7
+>>> usep pepe.so
+Warning: ´use' and 'call' are the only active commands right now : line 8
+Usage: 'use <file>.so' after 'call <function>'
+>>> puse pepe.so
+Warning: ´use' and 'call' are the only active commands right now : line 9
+Usage: 'use <file>.so' after 'call <function>'
+>>> use  ./pepe.so
+Warning: Only one space between command and argument : line 10
+>>> use ~/pepe/.so
+Warning: Syntax error command file path should be following linux guidelines and be a '.so' file : line 11
+>>> use  pepe.so
+Warning: Only one space between command and argument : line 12
+>>> use " pepe.so
+Warning: If path starts with (") it should finish with them : line 13
+>>> call a
+Warning: To call a function, a library should be given first : line 14
+Starting session for command: [use " pepe.so"] at line [15]
+>>> call 2a
+Warning: Syntax error command func name should be following C guidelines : line 16
+No 'call' command for current library found! Looking up for next use...: Undefined error: 0
+Starting session for command: [use \ pepe.so] at line [17]
+No 'call' command for current library found! Looking up for next use...: Undefined error: 0
+Starting session for command: [use pepe.so] at line [18]
+>>> call f(x)
+Warning: Syntax error command func name should be following C guidelines : line 19
+>>> call long_named_function(with, long, number, of, parameters)
+Warning: Syntax error command func name should be following C guidelines : line 20
+No read permission: pepe.so
+>>> call a
+Warning: To call a function, a library should be given first : line 21
+Starting session for command: [use ./test.so] at line [22]
+Successfully loaded: ./test.so
+Get function from lib failed: dlsym(0x9f826090, no_existent): symbol not found
+Method [call no_existent] is not found! : line 23
+Running method [example] from lib [./test.so]:
+
+This is example() from test.so
+Finished process of running library with status 0
+
+Starting session for command: [use ./other.so] at line [25]
+Successfully loaded: ./other.so
+Running method [func1] from lib [./other.so]:
+
+00000000000This is func1() from other.so
+Finished process of running library with status 0
+
+Running method [fail_at_runtime] from lib [./other.so]:
+
+Finished process of running library with status 11
+
+Program finished successfully!
