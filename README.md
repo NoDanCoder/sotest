@@ -85,6 +85,13 @@ Running method [example] from lib [test.so]:
 This is example() from test.so
 Finished process of running library with status 0
 ```
+
+## Comments
+
+- If you are loading a library using a relative path use a relative search based on your current position `./`.
+- Support for inline comments in code is not enabled yet.
+- Any try to use a `use` command after already loaded a library will load the new library, even if command fails, on which case you will have to load a library again to start.
+
 ## Authors
 
 - [@NoDanCoder](https://www.github.com/nodancoder)
@@ -93,4 +100,3 @@ Finished process of running library with status 0
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
-
