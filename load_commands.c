@@ -5,6 +5,7 @@
 
 #include "load_commands.h"
 #include "memory_manager.h"
+#include "parse_command.h"
 #include "metadata.h"
 
 Command *create_command_node(Metadata metadata, Command *current_command, char *content, unsigned int index) {
@@ -119,20 +120,22 @@ ssize_t get_commands(Metadata metadata, Command **commands, char *filename) {
     return (i);
 }
 
-int GENERAL_ERROR = 1;
-int MISUSE_ERROR = 2;
+
 
 Command *load_commands(Metadata metadata, int ac, char **av) {
     if (ac != 2) {
         perror("Only one file should be given!");
-        safe_exit(MISUSE_ERROR, metadata.garbaje_collector_data);
+        safe_exit(2, metadata.garbaje_collector_data);
+    } else if (valid_file_name(metadata, av[1])) {
+        perror("Only one file should be given!");
+        safe_exit(2, metadata.garbaje_collector_data);
     }
 
     printf("Running reading file...\n");
     Command *commands = NULL;
     if (get_commands(metadata, &commands, av[1]) == -1) {
         perror("There was an error getting comands!");
-        safe_exit(GENERAL_ERROR, metadata.garbaje_collector_data);
+        safe_exit(1, metadata.garbaje_collector_data);
     }
 
     return commands;

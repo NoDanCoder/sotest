@@ -36,6 +36,12 @@ int valid_command(Metadata metadata, const char *str, const char *pattern) {
     }
 }
 
+int valid_file_name(Metadata metadata, const char *str) {
+    // Pattern explanation:
+    // .+\\.sc          - Must finish with a .sc extention
+    const char *pattern = "^.+\\.sc$";
+    return valid_command(metadata, str, pattern);
+}
 
 int valid_use_command(Metadata metadata, const char *str) {
     // Pattern explanation:
