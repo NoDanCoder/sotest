@@ -19,9 +19,9 @@ use pepe.so
 call f(x)
 call long_named_function(with, long, number, of, parameters)
 call a
-use /Users/danielrobayo/console/sotest/test.so
+use ./test.so
 call no_existent
 call example
-use other.so
+use ./other.so
 call func1
 call fail_at_runtime
