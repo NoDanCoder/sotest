@@ -2,6 +2,7 @@ use
 use
 wrong command
  use pepe.so
+# use test.so
 usepepe.so
 use .so
 usep pepe.so

@@ -65,10 +65,20 @@ int valid_call_command(Metadata metadata, const char *str) {
     return valid_command(metadata, str, pattern);
 }
 
+int valid_comment_command(Metadata metadata, const char *str) {
+    // Pattern explanation:
+    // ^#               - Must start with "#"
+    // .*               - Followed by any character
+    const char *pattern = "^#.*$";
+    return valid_command(metadata, str, pattern);
+}
+
 Command *lookup_use_command(Metadata metadata, Command *command) {
     Command *current = command;
     while (current) {
-        if (strncmp(current->content, "call", 4) == 0 && (strlen(current->content) == 4 || current->content[4] == ' ')) {
+        if (valid_comment_command(metadata, current->content)) {
+            ;
+        } else if (strncmp(current->content, "call", 4) == 0 && (strlen(current->content) == 4 || current->content[4] == ' ')) {
             fprintf(stderr, ">>> %s\n", current->content);
             fprintf(stderr, "Warning: To call a function, a library should be given first : line %u\n", current->index);
         } else if (strncmp(current->content, "use ", 4) != 0) {
@@ -100,7 +110,9 @@ Command *lookup_use_command(Metadata metadata, Command *command) {
 Command *lookup_call_command(Metadata metadata, Command *command) {
     Command *current = command;
     while (current) {
-        if (strncmp(current->content, "use", 3) == 0 && (strlen(current->content) == 3 || current->content[3] == ' ')) {
+        if (valid_comment_command(metadata, current->content)) {
+            ;
+        } else if (strncmp(current->content, "use", 3) == 0 && (strlen(current->content) == 3 || current->content[3] == ' ')) {
             current->identifier = "use";
             return current;
         } else if (strncmp(current->content, "call ", 5) != 0) {
